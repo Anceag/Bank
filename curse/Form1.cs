@@ -31,7 +31,7 @@ namespace curse
             refreshListBox();
         }
 
-        public void refreshListBox()
+        public void refreshListBox() // updates listbox with new information
         {
             listBox1.Items.Clear();
             for (int i = 0; i < curList.Count; i++)
@@ -56,14 +56,14 @@ namespace curse
             left = (bank.Interval / 1000) - 1;
         }
 
-        private void addPercent(object sender, EventArgs e)
+        private void addPercent(object sender, EventArgs e) // adds money to users' money equivalent to their category and time left
         {
             bank.AddPercent();
             FullUpdate();
             left = bank.Interval / 1000;
         }
 
-        private void seconds(object sender, EventArgs e)
+        private void seconds(object sender, EventArgs e) // runs every second
         {
             timer.Text = left-- + "";
         }
@@ -78,6 +78,7 @@ namespace curse
             }
         }
 
+        // dynamic update
         public void FullUpdate()
         {
             updateCurList();
@@ -86,7 +87,6 @@ namespace curse
             if(Selected != "")
                 textBox1.Text = Selected;
         }
-
         public void updateCurList()
         {
             curList.Clear();
@@ -98,7 +98,6 @@ namespace curse
                     curList.Add(bank.Depositors[searchList[i]]);
             }
         }
-
         private void updateSelected()
         {
             Selected = "Name: " + Depositor.GetName(curList[listBox1.SelectedIndex])

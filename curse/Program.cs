@@ -48,7 +48,8 @@ namespace curse
         {
             return LastMilliseconds = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
-
+        
+        // gets information from file
         public static string GetName(string str)
         {
             return str.Substring(str.IndexOf("name=") + 5, str.IndexOf("surname=") - str.IndexOf("name=") - 6);
@@ -94,6 +95,7 @@ namespace curse
             LastMilliseconds = GetLastMilliseconds(str);
         }
 
+        // sets information to file
         public override string ToString()
         {
             return "name=" + Name + " surname=" + Surname + " personalnumber=" + PersNum + " money=" + Money + " category=" + Category + " mil=" + LastMilliseconds + " lastdate=" + LastDate;
@@ -106,19 +108,23 @@ namespace curse
         public int Interval { get; private set; } = 60000;
         string file;
 
-        public Bank(string file)
+        public Bank(string file) // opens a file, if it doesn't exist, creates a new one
         {
             this.file = file;
             if (!File.Exists(file))
-                using (FileStream fs = File.Create(file)) { }
+            {
+                FileStream fs = File.Create(file);
+                fs.Close();
+            }
             Depositors = File.ReadAllLines(file);
         }
 
-        public void Save()
+        public void Save() // writes the data into the file
         {
             File.WriteAllLines(file, Depositors);
         }
 
+        // different search methods
         public List<int> Search(params string[] keys)
         {
             List<int> arr = new List<int>();
@@ -141,7 +147,6 @@ namespace curse
             }
             return arr;
         }
-
         public List<int> MainSearch(string nm, string snm, string pnm)
         {
             List<int> arr = new List<int>();
@@ -164,7 +169,6 @@ namespace curse
             }
             return arr;
         }
-
         public int StraightSearch(string str)
         {
             for(int i = 0; i < Depositors.Length; i++)
@@ -175,7 +179,7 @@ namespace curse
             return -1;
         }
 
-        public void AddMoney(int who, double money)
+        public void AddMoney(int who, double money) // adds money to a users money
         {
             if (who < 0 || who > Depositors.Length || money < 0) return;
             else
@@ -190,7 +194,7 @@ namespace curse
 
         }
 
-        public void TakeMoney(int who, double money)
+        public void TakeMoney(int who, double money) // takes money from a user
         {
             if (who < 0 || who > Depositors.Length || money < 0) return;
             else
@@ -204,7 +208,7 @@ namespace curse
             }
         }
 
-        public void AddDepositor(string name, string surname, int category, double money)
+        public void AddDepositor(string name, string surname, int category, double money) // creates a user
         {
             Depositor d = new Depositor(name, surname, category, money);
             Array.Resize(ref Depositors, Depositors.Length + 1);
@@ -212,7 +216,7 @@ namespace curse
             Save();
         }
 
-        public void AddPercent()
+        public void AddPercent() // adds money to users' money equivalent to their category and time left
         {
             for(int i = 0; i < Depositors.Length; i++)
             {
@@ -232,7 +236,7 @@ namespace curse
             Save();
         }
 
-        public string Delete(int index)
+        public string Delete(int index) // deletes a user from and puts the las one on their place
         {
             string t = Depositors[index];
             Depositors[index] = Depositors[Depositors.Length - 1];
